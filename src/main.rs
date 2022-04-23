@@ -15,7 +15,7 @@ struct App {
 #[derive(Parser)]
 enum Command {
     Dealpha {
-        path: PathBuf,
+        paths: Vec<PathBuf>,
         #[clap(long)]
         outline: bool,
     },
@@ -31,7 +31,13 @@ fn run() -> anyhow::Result<()> {
     let app = App::parse();
 
     match app.command {
-        Command::Dealpha { path, outline } => dealpha(&path, outline)?,
+        Command::Dealpha { paths, outline } => {
+            for path in paths {
+                if let Err(e) = dealpha(&path, outline) {
+                    eprintln!("Error dealpha-ing {}: {e}", path.to_string_lossy());
+                }
+            }
+        }
     }
 
     Ok(())

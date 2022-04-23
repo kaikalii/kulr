@@ -33,8 +33,7 @@ fn dealpha(path: &Path) -> anyhow::Result<()> {
     let mut image = image::open(path)?.to_rgba8();
     for pixel in image.pixels_mut() {
         if pixel.0[3] > 0 {
-            println!("{}", pixel.0[3]);
-            pixel.0[3] = 255;
+            pixel.0[3] = if pixel[3] < 127 { 0 } else { 255 };
         }
     }
     image.save(path)?;

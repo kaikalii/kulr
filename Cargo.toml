@@ -1,0 +1,10 @@
+[package]
+edition = '2021'
+name = 'kulr'
+version = '0.1.0'
+
+[dependencies]
+anyhow = '1'
+clap.features = ['derive']
+clap.version = '3'
+image = '0.24.1'

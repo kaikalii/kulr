@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use clap::Parser;
 
@@ -23,8 +23,20 @@ fn run() -> anyhow::Result<()> {
     let app = App::parse();
 
     match app.command {
-        Command::Dealpha { path } => image::open(&path)?.to_rgb8().save(path)?,
+        Command::Dealpha { path } => dealpha(&path)?,
     }
 
+    Ok(())
+}
+
+fn dealpha(path: &Path) -> anyhow::Result<()> {
+    let mut image = image::open(path)?.to_rgba8();
+    for pixel in image.pixels_mut() {
+        if pixel.0[3] > 0 {
+            println!("{}", pixel.0[3]);
+            pixel.0[3] = 255;
+        }
+    }
+    image.save(path)?;
     Ok(())
 }
